@@ -24,6 +24,7 @@ description: 个人终端配置
 
 如果你也对 `Wrap` 感兴趣, 可以看看这篇文章 [超越 iTerm！号称下一代 Terminal 终端神器，用完爱不释手](https://juejin.cn/post/7089224236941721607)
 
+![Warp](https://keqing-img.oss-cn-beijing.aliyuncs.com/post/warp.png)
 ![Warp](../../static//img/blog/warp.png)
 
 ### oh-my-zsh
@@ -75,24 +76,100 @@ ZSH_THEME="spaceship"  #配置zsh主题为spaceship
 source ~/.zshrc
 
 # 5. (可选) 配置别名 , zsh 可玩性非常高 , 感兴趣自行研究
+## git lias
 alias gc='git clone'
 alias gs='git status'
 alias gd='git diff'
 alias ga='git add .'
+alias gap='git add -p'
 alias gcm='git commit -m'
+alias gca='git commit --amend'
+alias gco='git checkout'
+alias gcob='git checkout -b'
+alias gcom='git checkout master'
+alias gcp='git cherry-pick'
 alias gb='git branch'
 alias gba='git branch -a'
+alias gbd='git branch -d'
+alias gbr='git branch -r'
 alias gp='git pull'
+alias gpr='git pull --rebase'
 alias gpu='git push'
+alias gpf='git push --force'
+alias gpnv='git push --no-verify'
 alias gl='git log'
+alias glg='git log --graph'
+alias grl='git reflog'
 
+## npm scripts
+alias dev='npm run dev'
+alias start='npm run start'
+alias build='npm run build'
+alias test='npm run test'
+alias deploy='npm run deploy'
 ```
 
 ### config
 
-- 开启鼠标 右键粘贴, 左键选中即复制
+- 开启鼠标左键选中即复制, 右键粘贴
 - 开启大小写匹配
-- shell alias & plugins
+- **shell alias & plugins**(in `~/.zshrc` )
+
+```bash
+# export config
+export ZSH="$HOME/.oh-my-zsh"
+export NVM_DIR=~/.nvm
+
+# Theme
+ZSH_THEME="spaceship"
+
+# plugins
+plugins=(git git-open )
+
+# source oh-my-zsh, nvm
+source $ZSH/oh-my-zsh.sh
+source $(brew --prefix nvm)/nvm.sh
+
+# User configuration
+
+
+#  aliases
+
+## git lias
+alias gc='git clone'
+alias gs='git status'
+alias gd='git diff'
+alias ga='git add .'
+alias gap='git add -p'
+alias gcm='git commit -m'
+alias gca='git commit --amend'
+alias gco='git checkout'
+alias gcob='git checkout -b'
+alias gcom='git checkout master'
+alias gcp='git cherry-pick'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gbd='git branch -d'
+alias gbr='git branch -r'
+alias gp='git pull'
+alias gpr='git pull --rebase'
+alias gpu='git push'
+alias gpf='git push --force'
+alias gpnv='git push --no-verify'
+alias gl='git log'
+alias glg='git log --graph'
+alias grl='git reflog'
+
+
+## npm scripts
+alias dev='npm run dev'
+alias start='npm run start'
+alias build='npm run build'
+alias test='npm run test'
+alias deploy='npm run deploy'
+alias coverage='npm run coverage'
+alias vitepress='yarn docs:dev'
+```
 
 ## Windows
 
