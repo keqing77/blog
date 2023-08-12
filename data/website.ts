@@ -69,7 +69,7 @@ export const websiteData: WebsiteCategory[] = [
       {
         name: "Developer Roadmap",
         desc: "Roadmap to becoming a web developer.",
-        logo: "https://roadmap.sh/logo.svg",
+        logo: "https://github.githubassets.com/favicons/favicon.svg",
         href: "https://roadmap.sh/",
       },
       {
@@ -117,6 +117,13 @@ export const websiteData: WebsiteCategory[] = [
         desc: '从2005年开始记录网络技术，包括 CSS、 HTML 和 JavaScript。',
         logo: '/img/website/mdn.png',
         href: 'https://developer.mozilla.org/zh-CN/',
+        tags: ['Css', '教程'],
+      },
+      {
+        name: 'javascript现代教程',
+        desc: '最好的javasript教程',
+        logo: 'https://zh.javascript.info/img/sitetoolbar__logo_en.svg',
+        href: 'https://zh.javascript.info/',
         tags: ['Css', '教程'],
       },
       {
@@ -169,7 +176,7 @@ export const websiteData: WebsiteCategory[] = [
       {
         name: 'Terminal Gif Maker',
         desc: '在线生成 Terminal GIF',
-        logo: '/img/website/favicon.ico',
+        logo: 'https://keqing-img.oss-cn-beijing.aliyuncs.com/post/terminalgit.png',
         href: 'https://www.terminalgif.com',
         tags: [],
       },
@@ -234,20 +241,6 @@ export const websiteData: WebsiteCategory[] = [
         logo: 'https://gitlab.com/uploads/-/system/group/avatar/6543/logo-extra-whitespace.png?width=64',
         href: 'https://gitlab.com/',
         tags: ['代码托管'],
-      },
-      {
-        name: 'Gitea',
-        desc: 'Gitea 是一个开源社区驱动的轻量级代码托管解决方案，后端采用 Go 编写，采用 MIT 许可证.',
-        logo: 'https://gitea.io/images/favicon.png',
-        href: 'https://gitea.io/',
-        tags: ['代码托管'],
-      },
-      {
-        name: "Coding",
-        desc: "提供一站式研发管理平台及云原生开发工具，让软件研发如同工业生产般简单高效，助力企业提升研发管理效能",
-        logo: "/img/website/coding.png",
-        href: "https://coding.net/",
-        tags: ["代码托管"],
       },
     ],
   },
@@ -387,13 +380,6 @@ export const websiteData: WebsiteCategory[] = [
         desc: 'Next.js 为您提供生产环境所需的所有功能以及最佳的开发体验：包括静态及服务器端融合渲染、 支持 TypeScript、智能化打包、 路由预取等功能 无需任何配置',
         logo: 'https://nextjs.org/static/favicon/favicon.ico',
         href: 'https://nextjs.org/',
-        tags: ['前端', 'React', '框架'],
-      },
-      {
-        name: 'Remix',
-        desc: 'Remix 是一个全栈 Web 框架，可让您专注于用户界面，并通过 Web 标准进行回溯，以提供快速、流畅且有弹性的用户体验',
-        logo: 'https://remix.run/favicon-light.1.png',
-        href: 'https://remix.run',
         tags: ['前端', 'React', '框架'],
       },
       {
@@ -664,14 +650,14 @@ export const websiteData: WebsiteCategory[] = [
       {
         name: 'Node',
         desc: 'Node.js 是一个基于 Chrome V8 引擎的 JavaScript 运行时',
-        logo: 'https://nodejs.org/static/images/favicons/apple-touch-icon.png',
+        logo: 'https://keqing-img.oss-cn-beijing.aliyuncs.com/svg/nodejs-icon-alt.svg',
         href: 'http://nodejs.cn/',
         tags: ['后端', 'Nodejs', '文档'],
       },
       {
         name: 'Deno',
         desc: '一个现代的JavaScript和TypeScript运行时',
-        logo: 'https://deno.land/logo.svg',
+        logo: 'https://keqing-img.oss-cn-beijing.aliyuncs.com/svg/deno.svg',
         href: 'https://bun.sh/',
         tags: ['Nodejs', 'Deno', 'JavaScript', 'TypeScript'],
       },
