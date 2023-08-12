@@ -1,0 +1,218 @@
+# HTML 面试题
+
+## Doctype 的作用
+
+<details>
+  <summary>答案</summary>
+  <div>
+    <h3>doctype 是一种标准通用标记语言的文档类型声明</h3>
+    <ul>
+      <li>
+        目的是告诉标准通用标记语言解析器要使用什么样的文档类型定义(DTD)来解析文档。
+      </li>
+      <li>浏览器本身分为两种模式，一种是标准模式，一种是怪异模式</li>
+      <li>
+        浏览器通过 doctype 来区分这两种模式 , doctype 在 html
+        中的作用就是触发浏览器的标准模式，如果 html 中省略了 doctype ,
+        浏览器就会进入到 Quirks 模式的怪异状态
+      </li>
+    </ul>
+  </div>
+</details>
+
+## meta(元信息) 的作用
+
+<details>
+  <summary>答案</summary>
+  <div>
+    <h3>meta 被称为元数据。元数据是对数据的描述。</h3>
+    <ul>
+      <li>- meta 标签共有两个属性，它们分别是 http-equiv 属性和 name 属性</li>
+      <li>- viewport 可以设置针对移动端的适配，</li>
+      <li>- http-equiv,相当于 http 的文件头作用,可以控制缓存策略 </li>{' '}
+      <li>- 可以针对 SEO 优化，又称 TDK，(Title Description Keywords) </li>{' '}
+    </ul>{' '}
+  </div>
+</details>
+
+```html
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="keywords" content="keywords关键词，SEO优化" />
+  <meta name="description" content="description网站描述，SEO优化" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>title网页标题，SEO优化</title>
+</head>
+```
+
+## link 和@import 区别
+
+<details>
+  <summary>答案</summary>
+  <div>
+    <ul>
+      <li>
+        @import 是 CSS 提供的语法规则，只有导入样式表的作用; 通过`@import
+        url(xxx.css);`来导入 CSS
+      </li>
+      <li>
+        link 是 HTML 提供的标签，不仅可以加载 CSS 文件，还可以定义 RSS、rel
+        连接属性等
+      </li>
+      <li>
+        @import 是 CSS2.1 才有的语法，故只可在 IE5+ 才能识别；link 标签作为 HTML
+        元素，不存在兼容性问题。
+      </li>
+      <li>
+        加载页面时，link 标签引入的 CSS 被同时加载；@import 引入的 CSS
+        将在页面加载完毕后被加载
+      </li>
+    </ul>{' '}
+  </div>
+</details>
+
+## 回流和重绘
+
+<details>
+  <summary>答案</summary>
+  <div>
+    <ul>
+      <li>浏览器解析过程并渲染页面的过程中，会不断涉及到回流与重绘 </li>
+      <li>
+        回流(reflow，又称重排)，是浏览器在解析页面时，对页面中的元素进行重新布局的过程{' '}
+      </li>
+      <li>
+        重绘(repaint，又称重绘)，是浏览器在解析页面时，对页面中的元素进行重新绘制的过程{' '}
+      </li>
+      <li>重绘触发条件：1.文本方向 2.颜色修改 3.阴影等修改 不涉及布局的 </li>
+      <li>
+        回流触发条件：1.DOM 操作 2.**读取**或修改元素尺寸
+        3，浏览器窗口大小变化{' '}
+      </li>
+      <li>回流的性能代价远大于重绘, 所以应该尽量减少回流的次数 </li>
+    </ul>{' '}
+  </div>
+</details>
+
+## 行内元素和块级元素有哪些？区别？
+
+**行内元素是在一行内从左到右排列，而块级元素是独占一行，从行到下一依次按照文档流进行排列**。
+
+1. 行内元素不可以设置宽高，行内元素只能设置`padding`，和`水平方向的margin`,常见的有`span , a ,strong ,b ,em , i , big ,small ,label ,img , input , select ,textarea`
+2. 块级元素，常见的有`div , h1---h6 , p , ul , ol , dl , table , form`
+3. 图片不是行内元素，而是行内块元素，所以可以设置宽高,通过设置`display`**属性来转化行内，块级，行内块级元素**
+
+## 浏览器本地存储有哪些呢？除此之外还有了解吗？
+
+:::info 浏览器本地存储
+
+- cookie
+- localStorage
+- sessionStorage
+
+:::
+
+:::caution 其他的本地存储
+
+- indexDB
+- web sql
+- 离线存储 manifest
+
+:::
+
+- cookie 是为了解决 http 无状态的问题，设计不是为了存储，所以大小只有 4KB，而后者才是为存储而设计，大小可以达到 5MB 以上
+- cookie 在与服务器端通信每次都会携带在 HTTP 头中，如果使用 cookie 保存过多数据会带来性能问题,而 sessionStorage 与 localStorage 仅在客户端（即浏览器）中保存，不参与和服务器的通信。
+
+:::danger 过期时间
+
+- sessionStorage 关闭标签页就失效，localStorage 会一直保存需要手动清理，
+- cookie 不设置过期时间的默认是关闭浏览器就失效，也可以设置为永久就和 localStorage 一样
+
+:::
+
+## 离线存储 manifest
+
+**manifest 文件可分为三个部分：**
+
+- **CACHE MANIFEST** - 在此标题下列出的文件将在首次下载后进行缓存：
+  - CACHE MANIFEST -文件申明
+  - CACHE- 需要缓存的文件。需要相对路径
+- **NETWORK** - 在此标题下列出的文件需要与服务器的连接，且不会被缓存
+- **FALLBACK** - 在此标题下列出的文件规定当页面无法访问时的回退页面（比如 404 页面）
+
+## HTML5 新特性
+
+- 语义化标签 （SEO 方便爬取）
+- `<Audio> <Video>`（视频和音频媒体标签）
+- **Web Worker (postMessage、onmessage)**
+- Websocket
+- Web Storage （Local Storage 和 Session storage）
+- **SVG 绘图**
+- **Canvas 绘图**
+- 拖拽 API (drag API)
+- 地理位置 (getCurrentPosition())
+- 增强型表单
+
+## iframe 优缺点
+
+iframe 是一个内联框架，可以在网页中嵌入外部网页，常用于后台管理系统等.
+
+- **优点:**
+  - `<iframe>`是允许跨域请求资源的，但是不能够修改，由此可以在网页中嵌套其他网页，如需要跨域通信的话，需要考虑 document.domain、window.name、window.postMessage
+  - 创建一个全新的独立的宿主环境，可以隔离或者访问原生接口及对象,实现广告展示的一个解决方案
+  - 若需要刷新 iframe 则只需要刷新框架内，不需要刷新整个页面
+- **缺点:**
+  - iframes 阻塞页面加载，影响网页加载速度，iframe 加载完毕后才会触发 window.onload 事件，动态设置 src 可解决这个问题
+  - 不利于 SEO，搜索引擎的爬虫无法解读 iframe 的页面
+  - iframe 与主页面是共享链接池的，若 iframe 加载时用光了链接池，则会造成主页面加载阻塞。
+
+## label 标签的作用 ? 如何使用 ?
+
+:::note label 标签的作用
+
+label 标签来定义表单控制间的关系,当用户选择该标签时，浏览器会自动将焦点转到和标签相关的表单控件上
+
+:::
+
+**label 的两种用法 :**
+
+- 一种是 id 绑定
+- 一种是嵌套
+
+```html
+<!-- 用法一: -->
+<label for="Name">Number:</label>
+<input type="“text“name" ="Name" id="Name" />
+
+<!-- 用法二: -->
+<label>
+  Date:
+  <input type="text" name="B" />
+</label>
+```
+
+## canvas 和 svg 区别
+
+> 这两个内容挺多的，而且我还没深入学习，只是简单的比较一下
+
+- Canvas 没有图层的概念，所有的修改整个画布都要重新渲染，而 SVG 则可以对单独的标签进行修改。
+- Canvas 是使用 JavaScript 程序绘图(动态生成)，SVG 是使用 XML 文档描述来绘图
+- SVG 则基于 XML 元素，放大缩小不会导致图形失真，可以用于地图
+- Canvas 更适合动态渲染，SVG 更适合静态图片，高保真文档查看
+
+## async 和 defer 的区别
+
+- 两者都开启并行异步下载 JS
+- defer 会在整个文档解析完成后，触发 DOMContentLoaded 事件前执行按照加载顺序执行脚本
+- async 会在下载完后立即执行
+
+## 语义化标签有什么作用呢？
+
+- 正确的标签做正确的事情，让开发体验更加良好。
+- SEO 优化，提高搜索引擎收录。

@@ -1,0 +1,302 @@
+# 浏览器面试题
+
+## 进程和线程
+
+> 一个工厂车间就是一个进程，里面的工人是线程。
+
+进程和线程
+
+> 浏览器是多进程的，1.主进程 2.多个渲染进程。3. 网络进程 4.GPU 进程 5. 多个插件进程 6.service worker
+
+- **进程**
+  - 一个进程就是一个程序的运行实例。启动一个程序的时候，操作系统会为该程序创建一块内存，用来存放代码、运行中的数据和一个执行任务的主线程，我们把这样的一个运行环境叫进程
+- **线程**
+  - 线程是 cpu 调度的最小单位
+
+## 常用浏览器内核
+
+- Chrome 浏览器内核：统称为 Chromium 内核或 Chrome 内核，以前是 Webkit 内核，现在是 Blink 内核；(Mac 下还是 webkit)
+- Firefox 浏览器内核：Gecko 内核
+- Safari 浏览器内核：Webkit 内核
+- IE 浏览器内核：Trident 内核
+
+## 从输入 url 到浏览器渲染出页面的过程
+
+1. 输入 url，第一次访问无 DNS 缓存进行 DNS 查询根据域名获取 IP 地址
+2. TCP 三次握手建立链接 + TLS/SSL 安全握手后请求服务器返回请求资源(浏览器会将请求资源拷贝一份做下次缓存文件)
+3. 浏览器解析资源处理 HTML 生成 DOM 树
+4. 处理 CSS 构建 CSSOM 树，如果遇到 JS 会中断 DOM 解析去下载 JS 并执行，可以给 JS 添加 async/defer 异步下载
+5. DOM 和 CSSROM 合并成 Render Tree 渲染树
+6. 浏览器根据 Render Tree 渲染树渲染页面
+7. 调用 GPU 绘制页面，合成图层显示在屏幕上
+
+## DNS 查询过程？怎么减少 DNS 查询时间？
+
+- 浏览器 DNS 缓存
+- 本地 DNS 缓存(hosts 文件)
+- 路由器 DNS
+- 运营商 DNS
+- DNS 服务器(本地域名服务器,根域名服务器,顶级服务器)
+
+> DNS 查找过程是递归查找，非常耗时间
+
+- **DNS 是基于 UDP 的**
+- **尽可能利用 DNS 缓存**
+- **开启 DNS 预解析**
+
+```html
+<link rel="dns-prefetch" href="https://fonts.googleapis.com/" />
+```
+
+## 浏览器一帧做了什么？
+
+1. 接受输入事件
+2. 执行事件回调
+3. 开始一帧
+4. 执行 RAF (RequestAnimationFrame)
+5. 页面布局，样式计算
+6. 绘制渲染
+7. 执行 RIC (RequestIdelCallback)
+   > 第七步的 RIC 事件不是每一帧结束都会执行，只有在一帧的 16.6ms 中做完了前面 6 件事儿且还有剩余时间，才会执行。如果一帧执行结束后还有时间执行 RIC 事件，那么下一帧需要在事件执行结束才能继续渲染，所以 RIC 执行不要超过 30ms，如果长时间不将控制权交还给浏览器，会影响下一帧的渲染，导致页面出现卡顿和事件响应不及时
+
+## Load 和 DOMContentLoaded 区别
+
+Load 和 DOMContentLoaded 区别
+
+- Load 事件触发代表⻚⾯中的 DOM，CSS，JS，图⽚已经全部加载完毕。
+- DOMContentLoaded 事件触发代表初始的 HTML 被完全加载和解析，不需要等待 CSS， JS，图⽚加载。
+
+## 新建一个标签页浏览器做了什么？
+
+## tip 如果是同一个进程，一个标签页卡死整个浏览器卡死
+
+打开一个网页，最少需要四个进程
+
+- **1 个网络进程、1 个浏览器进程、1 个 GPU 进程以及 1 个渲染进程**。
+- 如果打开的页面有运行插件的话，还需要再加上 1 个插件进程。
+
+## 浏览器的缓存机制
+
+缓存策略和缓存位置
+
+- 第一次请求，没有缓存，浏览器将服务器返回的资源拷贝一份作缓存
+- 第二次请求，会先根据缓存文件的响应头的 cache control 判断是否能走强缓存，能则强缓存，返回状态码 200
+- 否则发起新的请求进入协商缓存，根据 ETag 和 Last Modiify 判断，能则走缓存返回状态码 304，否则返回资源
+- **优先级**
+  - 强缓存 > 协商缓存
+  - 强缓存: Cache Control > Expire
+  - 协商缓存: ETag > Last Modiify
+
+> 缓存位置和优先级
+
+- Service Worker(需要 HTTPS，浏览器的独立线程)
+- Memory Cache(内存)
+- Disk Cache(硬盘)
+- Push Cache(推送缓存)
+- 重新发起请求
+
+## Service Worker
+
+浏览器背后的独立线程
+
+> Service Worker 是运行在浏览器背后的独立线程，可以用来实现缓存功能。Application -> Service Worker
+
+- 使用 Service Worker 的话，传输协议必须为 HTTPS。因为 Service Worker 中涉及到请求拦截，所以必须使用 HTTPS 协议来保障安全。
+- Service Worker 实现缓存功能一般分为三个步骤：首先需要先注册 Service Worker，然后监听到 install 事件以后就可以缓存需要的文件，那么在下次用户访问的时候就可以通过拦截请求的方式查询是否存在缓存，存在缓存的话就可以直接读取缓存文件，否则就去请求数据
+
+## 浏览器渲染原理
+
+浏览器渲染原理
+
+> 阻塞渲染
+
+- css 放最上面，JS 放最下面，CSS 解析不阻塞，JS 下载和解析执行都会阻塞。
+- script 加上 defer/asycn 标签开启异步下载，defer 下载完按顺序执行，async 下载完立即执行
+- 减少回流与重绘
+
+> 重绘和回流
+
+- 重绘是当节点需要更改外观而不会影响布局的。(如改变颜色)
+- 回流是布局或者几何属性需要改变就称为回流。(改变元素大小)
+
+## 浏览器存储
+
+cookie, Session Storage ,local Storage ,indexDB (webSQL)
+
+- 大小，cookie 不是设计为存储，而是解决 http 无状态，大小只有 4K，而后二者有 5M
+- 生效时间: cookie 不设置过期时间的话关闭标签页就清除，session storage 也是，local storage 是永久，需要手动清除
+- cookie 会在客户端和服务端通信过程中来回携带，每次都会携带在 header 中
+
+| 种类 | cookie | session Storage | local Storage | indexDB |
+| :-- | :-: | --: | --: | :-: |
+| 大小 | 4K | 5M | 5M | 取决于您的硬盘大小 |
+| 生效时间 | 默认关闭标签页就清除，也可以设置永久 | 关闭标签页就清除 | 永久，需要手动清除 | 其实就是个数据库 |
+| 是否参与服务端通信 | 携带在 header 中 | 无 | 无 | 无 |
+
+## 存储 API 调用？实现一个 getALL？
+
+```js{1,9}
+localStorage 和 sessionStorage 的API调用是一样的。
+1. 设置数据: localStorage.setItem(key,value);
+2. 获取数据: localStorage.getItem(key);
+3. 删除数据: localStorage.removeItem(key);
+4. 清空数据: localStorage.clear();
+5. 获取数据的长度: localStorage.length;
+6. 获取所有数据: localStorage.getAll(); //自己实现
+
+localStorage.getAll = function(){
+  var obj = [];
+  for(var i =0;i<localStorage.length;i++){
+     obj.push(localStorage.getItem(localStorage.key(i)));
+  }
+  return obj;
+}
+```
+
+## 浏览器的并发链接限制
+
+浏览器同域名请求的最大并发数是有限制的
+
+> chrome 和火狐是**6**个，IE 是 4 个
+
+- Chrome 最多允许对同一个 Host 建立六个 TCP 连接,只支持 6 个的话那么一次加载几十张图片的网页就有几十次 http 请求，怎么办呢？这种情况页面加载速度肯定是肉眼可见的慢的。
+- 因此在优化页面加载速度时，会把一些资源放到不同的域名下，从而提高并发个数。
+- 现在有了 http 2.0 多路复用后，这个变得没那么重要了
+
+## BOM 的 API
+
+BOM(Borwser Object Model)浏览器对象模型
+
+> history
+
+```js
+window.history.back(); //history中向后跳转
+window.history.forward(); //history中向前进
+window.history.go(-1); //后退1
+window.history.go(1); //前进1
+window.history.go(0); //刷新
+history.pushState();
+history.replaceState();
+```
+
+## 浏览器事件机制
+
+事件是用户操作网页时发生的交互动作，比如 click/move， 事件除了用户触发的动作外，还可以是文档加载，窗口滚动和大小调整。事件被封装成一个 event 对象，包含了该事件发生时的所有相关信息（ event 的属性）以及可以对事件进行的操作（ event 的方法）。
+
+事件是用户操作网页时发生的交互动作或者网页本身的一些操作，现代浏览器一共有三种事件模型：
+
+- **DOM0 级事件模型**，这种模型不会传播，所以没有事件流的概念，但是现在有的浏览器支持以冒泡的方式实现，它可以在网页中直接定义监听函数，也可以通过 js 属性来指定监听函数。所有浏览器都兼容这种方式。直接在 dom 对象上注册事件名称，就是 DOM0 写法。
+- **IE 事件模型**，在该事件模型中，一次事件共有两个过程，事件处理阶段和事件冒泡阶段。事件处理阶段会首先执行目标元素绑定的监听事件。然后是事件冒泡阶段，冒泡指的是事件从目标元素冒泡到 document，依次检查经过的节点是否绑定了事件监听函数，如果有则执行。这种模型通过 attachEvent 来添加监听函数，可以添加多个监听函数，会按顺序依次执行。
+- **DOM2 级事件模型**，在该事件模型中，一次事件共有三个过程，第一个过程是事件捕获阶段。捕获指的是事件从 document 一直向下传播到目标元素，依次检查经过的节点是否绑定了事件监听函数，如果有则执行。后面两个阶段和 IE 事件模型的两个阶段相同。这种事件模型，事件绑定的函数是 addEventListener，其中第三个参数可以指定事件是否在捕获阶段执行。
+
+## 浏览器内多个标签页之间怎么通信?
+
+tip 多个标签页之间的通信，本质上都是通过中介者模式来实现的。线程之间共享进程中的数据因为标签页之间没有办法直接通信，因此我们可以找一个中介者，让标签页和中介者进行通信，然后让这个中介者来进行消息的转发。
+
+- **使用 websocket 协议**，因为 websocket 协议可以实现服务器推送，所以服务器就可以用来当做这个中介者。标签页通过向服务器发送数据，然后由服务器向其他标签页推送转发。
+- **使用 ShareWorker 的方式**，shareWorker 会在页面存在的生命周期内创建一个唯一的线程，并且开启多个页面也只会使用同一个线程。这个时候共享线程就可以充当中介者的角色。标签页间通过共享一个线程，然后通过这个共享的线程来实现数据的交换。
+- **使用 localStorage 的方式**，我们可以在一个标签页对 localStorage 的变化事件进行监听，然后当另一个标签页修改数据的时候，我们就可以通过这个监听事件来获取到数据。这个时候 localStorage 对象就是充当的中介者的角色。
+- **使用 postMessage 方法**，如果我们能够获得对应标签页的引用，就可以使用 postMessage 方法，进行通信。
+
+## 同源策略和跨域方案
+
+tip 同源策略
+
+- 只存在于**浏览器**
+- 同源策略: **端口、协议、域名**一致就是同源 跨域方案
+
+1. jsonp
+2. cors
+3. node 正向代理
+4. nginx 反向代理
+5. iframe + window.name
+6. iframe + postmessage
+7. iframe + document.domain
+8. iframe + location.hash
+9. 浏览器开启跨域
+
+## 什么是僵尸进程和孤儿进程
+
+- **僵尸进程**
+  - 子进程比父进程先结束，而父进程又没有释放子进程占用的资源，那么子进程的进程描述符仍然保存在系统中，这种进程称之为僵尸进程。
+- **孤儿进程**
+  - 父进程退出了，而它的一个或多个进程还在运行，那这些子进程都会成为孤儿进程。孤儿进程将被 init 进程(进程号为 1)所收养，并由 init 进程对它们完成状态收集工作
+
+## V8 的垃圾回收机制
+
+垃圾回收-回收不再使用的变量内存空间
+
+- 标记清除算法
+- 标记压缩算法
+
+## 内存泄露原因？解决方案？
+
+内存泄露，因为保持着对变量的引用，垃圾回收不会回收该内存空间，造成内存泄露，网页性能下降
+
+- 清除不必要的闭包、定时器、监听器的引用
+- Performance 选项卡找到内存泄露的原因，将内存泄露的变量引用置为 null
+- 使用未声明的变量，而意外的创建了一个全局变量，如直接声明 变量，不使用 let const 等关键词
+
+## 安全防范
+
+tip XSS(跨站脚本攻击) 攻击者通过在网站注入恶意脚本，使之在用户的浏览器上运行，从而盗取用户的信息如 cookie 等 XSS 可以分为存储型、反射型和 DOM 型
+
+> XSS 攻击原理
+
+比如一个输入框，或者提交表单，正常来说用户输入的是自己的信息，但是攻击者可以输入`<script>恶意代码</script>`,从而执行恶意脚本，对网站进行攻击。
+
+> XSS 防御
+
+1. 需要插入到 HTML 中的代码做好充分的转义,对`<>` 等**特殊字符进行转义**，富文本编辑器的话使用**白名单过滤**
+2. **开启 CSP(内容安全策略)**，
+   1. 具体设置 HTTP 首部中的` Content-Security-Policy`，
+   2. 一种是设置 meta 标签的方式 `<meta http-equiv="Content-Security-Policy">`
+3. cookie 使用 **http-only**，使得 js 脚本无法获取。也可以设置 **cookie 作用域** , 仅在当前域名生效
+4. 关键信息使用 **验证码** 验证
+
+tip CSP Content Secure Policy(内容安全策略) 开启 CSP
+
+1. 具体设置 HTTP 首部中的` Content-Security-Policy`，
+2. 一种是设置 meta 标签的方式 `<meta http-equiv="Content-Security-Policy">` tip CSRF (Cross Site Request Forgery)
+
+---
+
+就是用户登录了网站 A，然后访问不安全网站 B，B 就可以拿到用户信息在网站 A 进行操作
+
+> CSRF 攻击原理
+
+**跨站请求伪造攻击,攻击者诱导用户进入一个第三方网站，然后该网站向被攻击网站发送跨站请求。如果用户在被攻击网站中保存了登录状态，那么攻击者就可以利用这个登录状态，绕过后台的用户验证，冒充用户向服务器执行一些操作。**
+
+> CSRF 防御
+
+1. **进行同源检测**，服务器根据 http 请求头中 origin 或者 referer 信息来判断请求是否为允许访问的站点，从而对请求进行过滤。当 origin 或者 referer 信息都不存在的时候，直接阻止请求。
+1. **设置 cookie 的 Samesite 属性** ，限制 cookie 不能作为被第三方网站使用
+1. **Token 验证**，服务器向用户返回一个随机数 Token ，当网站再次发起请求时，在请求参数中加入服务器端返回的 token ，然后服务器对这个 token 进行验证。
+
+## tip SQL 注入
+
+SQL 注入就是拼接 sql 语句 查询数据库
+
+> SQL 注入攻击原理
+
+```sql
+-- 看一条简单的sql语句
+String sql = "select * from user_table where username=
+' " + userName + " ' and password=' " + password+" '";
+
+--当输入了上面的用户名和密码，上面的SQL语句变成：
+SELECT * FROM user_table WHERE username = '’or 1 = 1 -- and password='’
+```
+
+条件后面 username=”or 1=1 用户名等于 ” 或 1=1 那么这个条件一定会成功，**数据库数据泄露或者数据被篡改**；
+
+> SQL 注入防御
+
+- 特殊符号过滤或转义处理
+- 使用预编译语句
+
+## tip HTTPS
+
+HTTP 是明文传输，无法加密传输信息，无法验证通信双方身份
+
+HTTPS 在计算机网络篇章写了

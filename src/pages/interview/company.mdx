@@ -1,0 +1,507 @@
+# 校招(面经记录)
+
+## 叠纸(上海)
+
+:::note 一面
+
+- 什么是堆和栈?
+- 引用类型和基本类型区别
+- 深拷贝和浅拷贝
+- 垃圾回收机制和过程
+- 事件循环是什么? node 和浏览器的事件循环差异?
+
+:::
+
+:::tip 二面
+
+- 为什么定时器的时间不准?
+- 浏览器解析页面的过程
+- http 2.0 介绍下
+- 微信是 TCP 还是 UDP?
+- 为什么 Restful API 没有被大规模使用?
+- 重构代码的原则
+- 实现 CSS hover 出现元素旋转 动画
+
+:::
+
+:::info 三面
+
+- 对叠纸的了解?
+- 平时如何学习?
+
+:::
+
+:::caution 编程题
+
+1. 手写 call
+1. 优化快速排序
+
+:::
+
+## 快手(上海)
+
+:::note 一面
+
+- vue 中 v-if 和 v-show 的区别
+- vue 中的 nextTick 是什么
+- nextTick 底层使怎么实现的
+- vue2 和 vue3 响应式的区别
+- 跨域产生的原因和解决方法
+- cookie 的 secure 这个属性是干啥的
+- cookie 的 httpOnly 是干啥的
+- 301,401,403,405 这些状态码都是干啥的
+
+:::
+
+:::caution 编程题
+
+1. JS 随机生成颜色
+1. 一个关于 Promise 并发的题目。大概是：一次性可能发 10 个请求,但是请求池控制一次性只能处理三个,请求池内的请求一个处理完后推进下一个请求
+1. vue 组件封装,写逻辑部分,css 忽略。大概是：全选单选,就像购物车的全选按钮,四个商品四个按钮,一个全选按钮,点击全选,商品都选中,反之,商品都选中则全选按钮亮。
+
+:::
+
+## XMind(深圳)
+
+:::note 一面
+
+- 三个盒子，中间盒子先缩小后不缩，再缩小第一个盒子，再缩小第三个盒子，最后固定大小
+- 两栏布局，左右两栏，怎么让右边的内容先显示出来
+- 讲一讲主流的编程范式 ? 面向过程，面向对象，函数式编程
+  - 主要围绕 FP 和 OOP
+- 强制转换类型 Number 给一个对象返回什么？null 和 undefined？
+  - （调用 toString 方法转化为基本类型） ， null 和 undefined (0)
+- 判断一个对象属性是否是私有的
+  - hasOwnProperty，还有个 reflect.ownkeys 不怎么会 reflect
+- weakmap 有了解吗？特点和优势？
+  - key 只能是 obj，键值是弱引用不会造成内存泄露，性能更好
+- symbol 有用过吗？作用？
+  - 作对象的私有属性
+- sub module ？子模块，不是很了解
+- git stash 切分支暂存起来，pop 弹出暂存区
+- git commit 提交的规范
+- http 缓存策略
+- 异步编程方案，重点讲 promise，API 有哪些？ 串行和并行方法？用 promise 实现 每隔一秒打印
+- Vite 和 Webpack 优化思路
+
+:::
+
+:::tip 二面
+
+- 浅拷贝有哪些?
+- 深拷贝和浅拷贝有哪些？引用传递和值传递区别？应用场景？
+- Vue3 的响应式实现原理?
+- 实现 Vue 的 reactivity
+- 实现 Vue 的 Computed
+- 防抖节流 ，重绘重排， 服务端渲染这么好？ 为什么大多数采用客户端渲染？ CSR 优点？
+- 对 Vue 源码了解程度？
+- Vue 和 React 的区别？
+- 还看过其他第三方库的源码吗？比如 Lodash
+
+:::
+
+:::info 三面
+
+- 性能优化，分类去说，
+- 如何监测性能指标，前端性能监控系统怎么设计
+- 3 万条数据做列表渲染，延迟加载，怎么去做？
+- Vue 的响应式原理，Vue2 讲到 Vue3
+- Vue3 中 Proxy 只能拦截对象，那 Vue3 响应式系统是怎么把基本数据类型转化成响应式的？
+  - ref 会将基本类型和引用类型 包装成对象再响应式？reactive 将引用类型转响应式
+- 虚拟 DOM 和操作真实 DOM 的不同场景的性能对比， diff 过程，优化，和 React 的对比
+- template 的编译过程
+  - 如果是 Vue 完整版本，包含了模板编译功能
+  - 如果运行时版本，不提供模板编译能力，需要通过 vue-loader 进行提前编译
+
+```jsx
+//  需要编译器
+new Vue({
+  template: `<div>{{h1}}</div>`
+})
+
+// 不需要编译器
+new Vue({
+  render(h) {
+    return h('div',this.hi)
+  }
+})
+
+1. 通过parse()方法解析 template，转化为 ast (抽象语法树)
+2. 优化 ast，标记静态节点
+3. 将 ast 转化为可执行代码
+4. 收集编译错误信息，编译过程会判断能不能走缓存(已编译模板直接走缓存)
+```
+
+- useState 使用了解构赋值，会什么使用数组而不是对象？
+- 讲一下 fiber 架构，diff 和 Vue 的区别
+- React 组件设计时候的注意点
+- 返回累加的结果，参数不定长， 如给 5 返回 1x2x3x4x5 。封装模块你会怎么封装？
+  - 模块化，命名空间，TS 限制参数类型范围，或者泛型。一直追问还有没有....
+- 封装一个模块判断参数是否相等，===,和 Object.js? 如果参数是表达式呢？ 如何参数 a =1 + 2 ,参数 b = 3，
+- 冒泡排序优化 [10,1,2,3,4,5,6,7,8,9] 优化到 O(1)
+
+```jsx
+void BubbleSort_Optimize_1(int* a,int size)
+{
+	assert(a);
+	if(size==1)
+		return;
+
+	bool flag=0;//定义标志位标记已经有序或无序
+	for(int i=0;i<size-1;i++)
+	{
+		flag=1;//开始置为1
+		for(int j=0;j<size-1-i;j++)
+		{
+			if(a[j]>a[j+1])
+			{
+				int tmp=a[j];
+				a[j]=a[j+1];
+				a[j+1]=tmp;
+				flag=0;//交换后对flag置0，表示已经有序
+			}
+		}
+		if(flag)
+			break;//如果flag为1则说明排序前已经有序
+	}
+}
+```
+
+:::
+
+## 招银网络科技(深圳)
+
+:::note 一面
+
+- 怎么写一个 JS 在线运行器?
+- 浅拷贝和深拷贝
+- this 的绑定规则有哪些?
+- 如何实现一个类的继承?
+- call , apply, bind 的区别?
+
+- 为什么 React 的 useState 要用数组解构?
+- React 和 Vue 的 diff 差异?
+
+:::
+
+:::tip 二面
+
+- 封装组件的思路?
+- 遇到了什么困难?如何解决?
+- 花了多少时间?
+- 浏览器解析页面的过程
+- http 2.0 介绍下
+- 微信是 TCP 还是 UDP?
+- 为什么 Restful API 没有被大规模使用?
+- 重构代码的原则
+- 实现 CSS hover 动画
+
+:::
+
+:::caution 编程题
+
+1. 实现一个深拷贝
+1. JSON 树结构转扁平对象
+
+:::
+
+## 三维家(广州)
+
+:::note 一面
+
+- 设计模式讲一下
+- TS 的泛型
+- TS 和 JS 的区别
+- 面向对象的特性讲一下
+- 判断矩形相交相离 降维 对比 xy 坐标即可
+- 前端规划
+- 数组实现一个队列 栈
+- 冒泡排序
+- 手写 call 手写 new
+
+:::
+
+:::caution 编程题
+
+设置 LocalStorage 到期自动删除
+
+```js
+class storage {
+  constructor(props) {
+    this.props = props || {};
+    this.source = this.props.source || window.localStorage;
+    this.initRun();
+  }
+  initRun() {
+    /*
+     * set 存储方法
+     * @ param {String} 	key 键
+     * @ param {String} 	value 值，存储的值可能是数组/对象，不能直接存储，需要转换 JSON.stringify
+     * @ param {String} 	expired 过期时间，以分钟为单位
+     * @ 由@IT·平头哥联盟-首席填坑官∙苏南 分享
+     */
+    const reg = new RegExp('__expires__');
+    let data = this.source;
+    let list = Object.keys(data);
+    if (list.length > 0) {
+      list.map((key, v) => {
+        if (!reg.test(key)) {
+          let now = Date.now();
+          let expires = data[`${key}__expires__`] || Date.now + 1;
+          if (now >= expires) {
+            this.remove(key);
+          }
+        }
+        return key;
+      });
+    }
+  }
+}
+```
+
+:::
+
+## 字节飞书(广州)
+
+:::note 一面
+
+- 进程和线程
+- 线程共享为什么比进程共享容易？
+- SPA 是什么？
+- 路由
+- React hooks 有哪些？
+- 绝对定位 position：absolute
+- 脱离文档流指的是什么？
+- 知道哪些计算机网络模型？OSI 和 TCP/IP
+- 怎么理解端到端的连接？
+- TCP 是怎么判断丢包的？
+- Cookie Session Token 的原理
+- 计算机的原码、反码、补码
+- 算法：最长无重复子串（力扣：3. 无重复字符的最长子串）
+- 算法：最长回文子串 ( 力扣： 5. 最长回文子串)
+
+:::
+
+:::tip 二面
+
+- 平时怎么学习
+- 谈一下对 Vue 和 React 的理解
+- React 的原生事件与它的合成事件的区别
+- 事件委托是什么？
+- e.target 和 e.currentTarget
+- 项目：Token 和 路由
+- localStorage 和 SessionStorage
+- 项目中有没有实现跨域的地方
+- 项目
+- 平时使用 js 还是 ts
+- 类选择器和伪类的区别及优先级？
+- CSS 选择器的优先级
+- 算法：斐波那契（尾递归优化）
+- 如何判断数据类型，语法糖是啥
+- Vite 原理
+
+:::
+
+:::caution 编程题
+
+算法：字符串消消乐算法：提取一段文字中所有的英文单词
+
+:::
+
+## CVTE(广州)
+
+:::note 一面
+
+- 进程和线程
+- 线程共享为什么比进程共享容易？
+- SPA 是什么？
+- 路由
+- React hooks 有哪些？
+- 绝对定位 position：absolute
+- 脱离文档流指的是什么？
+- 知道哪些计算机网络模型？OSI 和 TCP/IP
+- 怎么理解端到端的连接？
+- TCP 是怎么判断丢包的？
+- Cookie Session Token 的原理
+- 计算机的原码、反码、补码
+- 算法：最长无重复子串（力扣：3. 无重复字符的最长子串）
+- 算法：最长回文子串 ( 力扣： 5. 最长回文子串)
+
+:::
+
+:::tip 二面
+
+- 文件上传 前端怎么获取文件 整合文件传到后端 断点续传
+- 首屏加载渲染慢怎么解决
+- 一次性获取所有 DOM 节点
+- 一次性大量列表渲染问题
+- label 标签作用,让 JS 主动获取焦点
+- flex 属性 圣杯布局
+- 实现 bind() 箭头函数意义
+- postmessage iframe cookie 通信
+- node 读取文件内容 开启 http 服务器
+- 获取页面 DOM 节点总数
+  - `document.getElementsByTagName('*').length`
+- 数组方法 比如截取数组 数组实现一个栈
+- vue 性能问题
+- z-index 问题,解决办法: 给父级添加 position:relative
+- 请描述下 SEO 中的 TDK？
+- iframe 能拿到父页面的 cookie 吗
+- a 页面与 b 页面是同源的不涉及跨域,a 页面 iframe 了 b 页面,a 页面登录后有了 cookies,这个时候 b 页面可以访问到 a 页面的 cookies 吗?请问怎样做可以让 a 页面的 cookies 传到 b 页面的 cookies 里面不跨域, cookie 是同步写的, 无论是 iframe, 还是不同的 window 或者 tab, 任何一个页面修改了 cookie, 其它页面就可以通过`document.cookie`拿到, 但是没法监听 cookie 的改变. 需要注意两点: 一是如果指定了`path`, 则不同`path`的页面拿不到, 二是如果设置了`httpOnly`, 则 js 无法读取.
+
+另外:
+
+- 如果要在 iframe 之间通信, 可以考虑使用`postMessage`.
+- 如果要跨页面监听数据变化, 可以考虑使用`localStorage`或者`sessionStorage`, 然后在`window`上监听`storage`事件
+- 场景题 1: (轮播图无缝切换) 轮播图首张和最后一张切换顿挫感，就是通过 index 去切换 index 0 会很生硬，
+- 加过渡， 不满意
+- 动态添加图片进图片容器
+- 场景题 2： 很多图片，类似瀑布流加载图片，有以下问题
+  - 问题 1. 图片加载不出来 (多张和单独某一张)
+    - http 请求阻塞，可以刷新解决
+    - 请求失败，包进 promise.any 去发，有错误则重发
+  - 问题 2. 加载得很慢
+    - (图片格式问题 jpg 压缩 gzip)
+    - 开启 CDN，追问 CDN 是什么，怎么解决问题
+  - 问题 3. 滚动卡顿
+    - 懒加载和预加载
+    - 运行一段时间后卡顿
+      - 内存泄漏，怎么判断和解决
+- 轮播图无缝切换 动态改变 index 或者动态添加图片进容器 看 swiper 插件源码
+- 图片加载不出来反复重排，事先设置宽高度还会吗？Alt 属性加载不出来用占位图
+- onerror   图片加载过程中发生错误而触发，用默认图片替换加载出错的图片，隐藏错误图片
+- 模块化 esmodule 和 commonJs。CJS 是 JS 的规范吗？谈谈你对 esmodule 的理解
+- 我看到你博客鼠标点击的动画效果是怎么做的呢？你有对动画的添加对性能影响做一个分析吗？
+- 你在做项目过程中有遇到什么困难的问题吗？是如何处理的呢？
+
+:::
+
+:::caution 编程题
+
+1. url 转对象
+1. rgba 转化成十六进制
+1. 反转链表
+
+:::
+
+## 虎牙(广州)
+
+:::note 一面
+
+- JS 数据类型
+- Vue 生命周期
+- Vue 响应式原理
+- Vue Router 模式
+- 跨域方案
+
+:::
+
+:::tip 二面
+
+- token 和 cookie 的区别
+- token 的作用,一刷新就不见了,怎么办
+- sameSite cookie 有哪一些值
+- CSRF,如何预防？
+- 同源的页面可不可以访问 cookie
+- postMessage,具体说说如何用它实现页面与页面之间的通信
+- postMessage 有什么安全性问题么
+- flex 实现圣杯布局
+- vue react 区别,diff 上说 vue 更好为什么
+- cdn 怎么针对很多 api 优化
+- promise.then 实现
+- 上拉加载和下拉刷新怎么实现
+- 子组件和父组件生命周期的顺序
+- webpack 的 loader 和 plugin 的区别,file-loader 和 url-loader 的区别
+- 上传文件的功能（断点续传）
+
+1、session 是有服务器生成,暂时保存在服务器上对客户端进行识别的会话身份标识,链接断开则 session 注销。
+
+2、cookie 是储存在客户端上,在于服务器交互的时候用于认证的类似于身份证的标识,链接断开则服务器上的 cookie 注销。
+
+3、token 是服务器生成,用于简化服务器进行客户端用户密码对比的根据用户信息数据库的密码用户名来生成的长时间标识（用于减轻服务器每次都需要逐个对比数据库中用户名和密码的负担）,储存在服务器上,链接断开,token 继续储存在服务器上。
+
+之间的关系：
+
+session 一般是基于 cookie 生成,
+
+token 可以包含在 cookie 中,token 可以绑定在 session 中作用：
+
+将 token 绑定在 session 中,在交互是对比 token 是否为 session 中的 token 可避免大多数逻辑漏洞以及 csrf 等
+
+:::
+
+## 多益网络(广州)
+
+:::note 一面
+
+- 图片格式都有哪些,优缺点
+- email 的正则表达式
+- URL 和 URI 的区别
+  - URI 是抽象的名词,有 URN 和 URL 两种,只不过 URN 没有流行起来,所以平常见到的 URI 都是 URL
+- link 和@import 的区别
+- 安卓 webview 中滚动容器设置\_\_\_属性能够使得出现的滚动条滚动得像 IOS 元素那么流畅？(不会)
+- 服务端和浏览器对传输的纯文本文件做**\_**处理后,可有效减少文本大小,甚至可以压缩到原来大小的 20% (gzip?不确定)
+- 如何比较 a+b 的计算结果等于 c？ (均为浮点数且小数点后的位数不确定) parseFloat.toFixed()
+- 如何用 js 判断,一个字符串中是否包含某一个子串
+- CSS 刮刮乐效果 (非 canvas,user-select？)
+
+```jsx
+function multiply(a, b) {
+  // 先把a,b两个数字都变成字符串
+  var stra = '' + a;
+  var strb = b.toString();
+  //获取小数位数
+  // indexOf('.')==-1  就是说明这个字符串中没有点,也就是没有小数
+  //stra.length -stra.indexOf('.')-1   的意思是用stra字符串的长度减去找到点的位置的索引再减去1（因为length会比index大1）就是小数点后面的长度
+  var lena = stra.indexOf('.') == -1 ? 0 : stra.length - stra.indexOf('.') - 1;
+  var lenb = strb.indexOf('.') == -1 ? 0 : strb.length - strb.indexOf('.') - 1;
+  // 通过Math的max方法求这两个里面哪个的小数点后面的位数更长,因为根据示例,保留的是长度更长的那一个数字后面的位数
+  var len = Math.max(lena, lenb);
+  // 通过parseFloat将字符串转换为浮点型数字,再通过toFixed决定保留小数位的长度
+  var result = parseFloat(a * b).toFixed(len);
+  return result;
+}
+```
+
+:::
+
+:::caution 编程题
+
+1. 实现一个函数 getType,能够识别所有类型的数据,例如 RegExp, Set 集合 Null
+2. 实现 Instanceof
+
+:::
+
+## 360(北京)
+
+```jsx
+"" + [1,2,3,4]
+// '1,2,3,4'
+
+var x = 10, y=8 ,c = ++x-y
+console.log(x>y) // true
+console.log(c>y) // false
+console.log(x%y>2) //true
+
+[]===[]  // false  引用类型,地址不相等
+0 === -0  //true
+
+obj = { a:0 }
+function test(obj){
+	obj.a = 1 ;
+	obj = { a: 2};
+	obj.b = 3;
+}
+test(obj);
+console.log(obj) // a:1
+
+obj是函数内部的一个形参,传递是obj的引用,obj.a修改引用对象的值,
+而后面重新给obj赋值,这时候obj丢失了对传入对象的引用。引用了一个新的对象。后面的obj.b是修改新对象的
+
+```
+
+## ThoughWorks
+
+1. 英文 presentation
+2. 文化面
+3. TDD pair programming

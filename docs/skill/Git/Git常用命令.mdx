@@ -1,0 +1,217 @@
+---
+id: git-common-commands
+slug: /git-common-commands
+title: Git常用命令
+date: 2022-08-18
+authors: keqing
+tags: [git]
+keywords: [git]
+sidebar_position: 2
+---
+
+<!-- truncate -->
+
+## Git 配置
+
+### Git config
+
+```bash
+# 全局配置 用户名 和 邮箱
+git config --global user.name ‘用户名’
+git config --global user.email ‘你的邮箱’
+git config --list    #列出配置项
+ssh-keygen -t rsa -C "你的邮箱"  #复制id_rsa_pub 里面的公钥到github上
+
+# 配置当前项目 用户名 和 邮箱
+git config user.name '用户名'
+git config user.email '邮箱'
+
+#展示所有 alias 和 configs
+git config --local --list #(当前目录)
+git config --global --list #(全局)
+
+```
+
+### Git Alias(别名)
+
+> 配置 Git 命令别名, 减少重复性工作
+
+```bash
+# 可以在 git 配置 , 也可以在 shell 配置, 如 .zshrc
+alias gc='git clone'
+alias gs='git status'
+alias gd='git diff'
+alias ga='git add .'
+alias gcm='git commit -m'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gp='git pull'
+alias gpu='git push'
+alias gl='git log'
+```
+
+## Git commit 规范
+
+> Commit
+
+- feat - A new feature
+- fix -A bug fix
+- docs - Documentation only changes
+- style - Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- refactor - A code change that neither fixes a bug nor adds a feature Type of change
+- chore - Other changes that don't modify src or test files
+- test - Adding missing tests or correcting existing tests
+- perf - A code change that improves performance
+- build - Changes that affect the build system or external dependencies (example scopes: gulp, broccoli,npm)
+- ci - Changes to our Cl configuration files and scripts (example scopes: Travis, Circle,BrowserStack, SauceLabs)
+- revert - Reverts a previous commit
+
+## 常用命令
+
+### 查看仓库状态
+
+```bash
+git status
+```
+
+### 查看日志
+
+```bash {6}
+git log                            # 查看日志
+git log -p                         # 查看详细历史
+git log --stat                     # 查看简要统计
+git log --oneline --graph 		   # 查看简单历史 显示树
+
+git reflog                         # 查看所有操作记录(包含已删除的 commit)
+```
+
+### 克隆仓库
+
+```bash {2}
+git clone repoUrl
+# 克隆时候要注意 克隆的 分支 是否 是你想要的~
+```
+
+### 创建分支并切换
+
+```bash
+# 创建分支并切换
+git checkout -b 分支名称
+
+# 创建分支
+git branch 分支名称
+
+# 切换分支
+git checkout 分支名称
+
+# 因为git checkout 既有撤销文件 又有创建文件等功能, 推荐使用 git switch切换分支
+git switch 切换分支
+```
+
+### 删除某条分支
+
+```bash
+git branch -d 分支名称           # 删除该分支（不能删除当前所在的分支，不能删除没有合并到master上的分支）
+git branch -D 分支名称           # 删除该分支（可以删除没有合并到master上的分支）
+git push -d origin branchName   # 删除远程分支
+```
+
+### 提交并推送
+
+```bash
+git commit -m '注释信息'
+git push '本地分支'  '远程分支'
+```
+
+### 撤销已经 add 的文件
+
+```bash
+git reset HEAD <路径/文件名> # 回退暂存区里的文件
+```
+
+### 撤销已经 commit 的文件
+
+```bash
+git reset --hard HEAD^   # 丢弃最新提交（未提交的内容会被擦掉）
+git reset --soft HEAD^   # 丢弃最新提交（未提交的内容不会被擦掉）
+```
+
+### 修改 commit 注释信息
+
+```bash
+git commit --amend        #对最新的一条commit进行修正
+```
+
+### 暂存代码(加需求常用)
+
+```bash
+git stash           # 暂存代码(直接保存当前修改的文件代码)
+git stash list      # 查看暂存代码列表
+git stash apply     # 命令时可以通过名字指定使用哪个stash，默认使用最近的stash（即stash@{0}）
+git stash pop       # 弹出暂存代码（出栈，删除list的这行记录）
+git stash drop      # 删除指定的stash记录
+```
+
+### 查看某段代码谁写的
+
+> blame 的意思是 '责怪' , 使用这条命令的背后含义你懂的 😁
+
+```bash
+git blame <file-name>
+```
+
+### git 查看某个文件的修改历史
+
+```bash
+git show '每次提交产生的哈希值'
+```
+
+### 提交 Pull Request
+
+1. 先 fork 源仓库
+2. 修改代码
+3. 创建新的分支
+4. 提交代码到新分支
+5. 拉取一下最新代码
+6. 到源仓库发起 pr
+7. 等待 merge
+
+### 合并分支
+
+```bash
+git merge '分支名称'          #  将分支合并到当前分支
+
+git rebase -i
+```
+
+### 重新设置基准点
+
+```bash {2}
+git rebase 目标基础点                     重新设置基础点
+git pull --rebase 			从远程仓库拉去代码并重新设置基础点
+```
+
+### 解决冲突
+
+冲突说明 有 2 人以上修改了同一个文件, git 不知道该保留哪一个人修改的代码
+
+> 遇到冲突需要手动修改 , 手动修改冲突的文件
+
+```bash
+git fetch    # 拉取远端代码,但不merge
+git merge    # git pull  =  git fetch + git merge
+```
+
+## monorepo
+
+[Monorepo 是什么，为什么大家都在用？](https://zhuanlan.zhihu.com/p/77577415)
+
+:::tip Monorepo
+
+某些项目需要包含并使用另外一个项目, 则可以把该项目当做项目的子模块, 它允许你将一个 Git 仓库作为另一个 Git 仓库的子目录。它能让你将另一个仓库克隆到自己的项目中，同时还保持提交的独立
+
+:::
+
+## submodule
+
+[Git 中 submodule 的使用](https://zhuanlan.zhihu.com/p/87053283)

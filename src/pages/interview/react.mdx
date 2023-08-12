@@ -1,0 +1,329 @@
+# React 面试题
+
+## 前端主流框架的比较和区别？
+
+前端框架做的事情
+
+> 一个公式概括 : UI = f(state)
+
+这个公式的意思就是 框架内部机制 根据 **状态(state)** 渲染 **视图(UI)**
+
+- 一个页面可以划分成三个大小层级，(应用级、组件级、节点级)
+- 框架的区别主要在于**更新粒度**的区别
+  - React 和 Vue 是更新到应用级
+  - Angular 是更新到组件级
+  - Sevelte 是更新到节点级
+
+## 为什么 React 和 Vue 都要用虚拟 DOM？
+
+修改真实 DOM 和 Virtual DOM 的过程，对比它们重排重绘的性能消耗
+
+- 真实 DOM∶ 生成 HTML 字符串＋ 重建所有的 DOM 元素
+- Virtual DOM∶ 生成 VNode(虚拟节点) ＋ DOM diff(对比算法) ＋ 必要的 DOM 更新
+- 操作 DOM 的代价是很高昂的，一个 DOM 结点有几千个属性，创建和生成都需要大量计算
+- **引入虚拟 DOM 的原因主要在于 能更快的开发应用，开发者写的更爽同时保证性能还不错**
+
+如果不是很复杂的应用，直接操作真实的 DOM 可能更快，但是如果是复杂的应用，比如有大量的组件，那么操作真实的 DOM 就会比较慢，因为每个组件都会生成一个真实的 DOM。
+
+## 什么是函数式编程(FP)? 和面向对象(OOP) 有什么区别？
+
+SPA(Single-Page-Application)
+
+- 编程的本质就是 对 **数据** 的操作
+- 传统面向对象是把 **数据** 装进 对象里面，操作对象去操作数据
+- 函数式编程是吧 **数据** 和 函数分开，通过**函数去操作数据**
+
+## 你是怎么理解函数式编程的？
+
+> 函数式编程的一些概念
+
+1. 纯函数(pure function)
+2. 副作用(effect)
+3. 闭包（Closure）
+4. 高阶函数(HOF)
+5. 柯里化（Currying）
+6. 组合（Composing）
+7. 链式调用(使用 map,filter,reduce 等方法,不用 for)
+
+---
+
+函数式来处理这些数据，就可以使得数据的每一次修改都可以变得可以追溯，可以很容易的定位到问题的所在
+
+---
+
+**FP 相比 OOP ，对编程开发人员技术要求更高，需要对程序的理解更深入，但开发人员经验、水平素质良莠不齐，为了统一协作采用 OOP 沟通成本更低**。
+
+## 什么是纯函数？什么是副作用？
+
+纯函数和副作用
+
+- 纯函数: 通过传入参数和返回值进行沟通,相同的传入参数永远只会有相同的返回值，没有副作用
+
+- 函数副作用指当调用函数时，除了返回函数值之外，还对主调用函数产生附加的影响。例如修改全局变量（函数外的变量）或修改参数,、调用 DOM API 修改页面，发送 Ajax 请求、调用 window.reload 刷新浏览器甚至是 console.log 打印数据。
+- 纯函数对于相同的输入有相同的输出，可以将结果进行存储缓存以提高性能
+- 更方便追踪数据修改的来源，同时让测试更加方便
+- 并行处理时，纯函数不需要访问共享的内存数据，任意运行
+
+> 纯函数和非纯函数
+
+```js
+//纯函数  返回结果只依赖于它的参数 a 和 b，sum(1, 2) 永远是 3
+const sum = (a, b) => a + b;
+
+//非纯函数   返回值与a相关，结果无法预料
+const a = 1;
+const sum = (b) => a + b;
+
+// 副作用
+var a = 5;
+function foo() {
+  a = 10;
+}
+foo(); // a 变成了10
+```
+
+[//]: # '## 对比Vue和React的区别？各自优缺点分析'
+
+## React 的 diff 算法原理，和 Vue 的 diff 对比哪个高效？
+
+React 和 Vue 的 diff 算法原理和对比
+
+> 虚拟 DOM 就是 JavaScript 对象，用对象来表示 DOM 节点结构
+
+- 两者都是基于虚拟 DOM + diff 算法的，两者都会在首屏渲染后根据 DOM 树生成一颗虚拟 DOM 树，当数据(状态)发生变化时，会重新生成一颗新的虚拟 DOM 树，然后对比两颗虚拟 DOM 树，找出变化的部分，然后更新 DOM 树。
+- 两者都对 diff 算法进行优化，因为不优化需要每次遍历旧的树，遍历新的树，再重新对比排序，时间复杂度是 O(n^3)
+- 优化后的 diff 算法
+  - 新旧虚拟 DOM 只会比较同级节点，不会跨级对比
+  - 比较后标签名不同，直接删除，不会往下进行比较
+  - 标签名相同，会判断 key 是否相同，相同则认为是同一个结点，也不会往下进行比较
+- React 是会重新生成一颗**完整的虚拟 DOM 树**，而 Vue**只为状态改变的组件生成新的 DOM 树**
+- Vue 的 diff 相对 React 更加高效，因为减少了很多虚拟 DOM 的创建和开销，而且在 Vue3 中还加入预编译和 flag 标记，diff 的性能更加高效。
+
+## 对 React-Fiber 的理解? 它解决了什么问题
+
+React-Fiber
+
+> 因为 JavaScript 在浏览器的主线程上运行，如果 JavaScript 运行时间过长，就会阻塞渲染进程，渲染的画面数变少，直接导致帧数下降(掉帧)，反映就是页面卡顿(动画或者滚动有顿挫感)。
+
+- 我的理解是相当于 时间切片，或者 **协程**
+- Fiber 把可中断的工作拆分成小任务，对正在做的工作调整优先次序(优先级)、重做、复用上次（做了一半的）成果
+- 在 diff 的过程中，js 会比较一部分虚拟 dom，然后让出主线程，给浏览器去做其他工作，然后继续比较，依次往复，等到最后比较完成，一次性更新到视图上。
+- 下图应该非常直观，就是让 JS 工作切片，执行完一个小切片就让浏览器去渲染，时间没有减少，但不会让应用迟迟没有渲染而导致卡顿。
+
+## React 如何判断何时重新渲染组件？如何避免不需要的 render？
+
+- **只要组件的 state 发生变化，React 就会对组件进行重新渲染**
+  > 避免不需要的 render
+- 因为 React 中的 shouldComponentUpdate 方法默认返回 true，这就是导致每次更新都重新渲染的原因。
+- 可以重写 shouldComponentUpdate 方法让它根据情况返回 true 或者 false 来告诉 React 什么时候重新渲染什么时候跳过重新渲染。
+- 可以利用 shouldComponentUpdate 或者 PureComponent 来减少因父组件更新而触发子组件的 render
+- 利用 React.memo 缓存组件的渲染，避免不必要的渲染。
+
+## 有状态组件和无状态组件的区别？各自的使用场景？
+
+状态组件
+
+> 有状态组件
+
+- 内部使用 state，维护自身状态的变化
+- 状态组件根据外部组件传入的 props 和自身的 state 进行渲染
+  > 无状态组件
+- 不依赖自身的状态 state
+- 组件内部不维护 state ，只根据外部组件传入的 props 进行渲染的组件，当 props 改变时，组件重新渲染。
+  > 使用场景
+- 无状态组件: 纯展示类型的组件
+- 有状态的组件: 内部需要管理状态的组件
+
+## 什么是受控组件和非受控组件？
+
+受控组件和非受控组件 (只存在于表单元素)
+
+- 受控组件就是表单元素的 value 通过 state(useState)来定义
+- 非受控组件就是表单元素的 value 无法通过 state 获取，只能使用 ref(useRef)来获取
+- 比如要获取 input 输入框的值，有 2 种方法
+  1. 获取 input DOM，
+  2. 让 input 的 value 被管理起来，也就是通过 state 来定义
+
+## 什么是高阶组件？
+
+> 高阶组件（HOC）就是一个函数，该函数接受一个组件作为参数，并返回一个新的组件
+
+高阶函数: 一个函数返回另一个函数高阶组件: 一个组件返回另一个组件
+
+## 对 React Portals 的理解，使用场景？
+
+React Portals
+
+> 参考 Vue3 的 Teleport(传送门)，都可以将子节点渲染到存在于父组件以外的 DOM 节点
+
+```jsx
+import sonComponent from './sonComponent';
+render() {
+  // sonComponent元素会被挂载在id为parent的div的元素上
+  return (
+    <div id="parent">
+        <DemoComponent />
+    </div>
+  );
+}
+```
+
+---
+
+**有些元素需要被挂载在更高层级的位置。最典型的应用场景：当父组件具有 overflow: hidden 或者 z-index 的样式设置时，组件有可能被其他元素遮挡，这时就可以考虑要不要使用 Portal 使组件的挂载脱离父组件。**
+
+> 例如：对话框，模态窗。
+
+## 谈谈 React Hooks(函数式组件)的理解，以及它的优缺点
+
+> hooks 就是函数式组件，一个 React 组件就是一个函数 tip 类组件是基于面向对象编程,函数式组件 Hooks 是基于函数式编程的
+
+- 优点
+  - 更容易复用代码
+  - 没有 class 组件中烦人 this 指向问题
+  - 运用函数式编程思维
+- 缺点
+  - hooks 没有生命周期,但可以用 useEffect 模拟**部分生命周期**
+
+## 为什么 useState 要使用数组而不是对象？hooks 使用限制？
+
+> `const [count, setCount] = useState(0)` 为什么是返回数组而不是返回对象呢？
+
+- 解构对象时，是以属性的名称为匹配条件,而数组是根据索引位置去映射的，可以重命名
+- 因为解构赋值后，数组可以重命名，而对象需要同名，使用多次需要设置别名
+- **useState 返回的是 array 而不是 object 的原因就是为了降低使用的复杂度**，返回数组的话可以直接根据顺序解构，而返回对象的话要想使用多次就需要定义别名了
+
+> hooks 使用限制
+
+- hooks 只能用在组件函数的最顶层
+- 不要在循环，条件或嵌套函数中调用 Hook
+- 只能在 React 函数式组件或自定义 Hook 中使用 Hook
+
+这是因为 React 需要利用调用顺序来正确更新相应的状态，以及调用相应的钩子函数。一旦在循环或条件分支语句中调用 Hook，就容易导致调用顺序的不一致性，从而产生难以预料到的后果。
+
+## 如何通过 useEffect 模拟生命周期？
+
+使用了 Hooks 的函数组件才有生命周期
+
+> Hooks 组件（使用了 Hooks 的函数组件）有生命周期，而函数组件（未使用 Hooks 的函数组件）是没有生命周期的
+
+- 第二个参数传空数组,可以模拟生命周期 componentDidMount
+- 第二个参数传递依赖项,可以模拟生命周期 componentDidUpdata
+- 在 useEffect return 一个方法,可以模拟生命周期 componentWillUnmount
+
+## 组件间通信的方式
+
+- 父传子: 父向子传 props
+- 子传父: 父向子传 props,props 为父组件自身的函数，子组件调用该函数，将要传递的数据作为参数传递到父组件
+- 兄弟组件:
+- 跨层级通信: 借助 context
+- 全局状态管理: redux 等状态管理库 **父组件向子组件通信: 父组件通过 props 向子组件传递需要的信息**
+
+```js
+// 父传子
+import React, {useState} from 'react';
+
+//子组件
+function Child(props) {
+  return <h2>子组件---{props.num}</h2>;
+}
+
+//父组件
+function Father(props) {
+  return <Child num={props.num} />;
+}
+```
+
+**子组件向父组件通信: props+回调的方式**
+
+```js
+// 子传父
+import React, {useState} from 'react';
+
+//子组件
+function Child(props) {
+  return (
+    <>
+      <h2>子组件-----{props.num}</h2>
+      <button
+        onClick={() => {
+          props.setNum(666);
+        }}>
+        点击修改num
+      </button>
+    </>
+  );
+}
+//父组件
+function Father(props) {
+  return <Child num={props.num} setNum={props.setNum} />;
+}
+```
+
+## Ref 和 State 的区别？
+
+ref
+
+> 希望组件存储某些信息，但又不希望这些信息触发组件渲染，则使用 ref
+
+| ref | state |
+| --- | --- |
+| useRef(initialValue)返回{ current: initialValue } | useState(initialValue)返回状态变量和状态设置函数的当前值 ( [value, setValue]) |
+| 更改 ref 不会触发重新渲染。 | 更改 state 会触发重新渲染。 |
+| 可变的--你可以在渲染过程之外修改和更新当前的值。 | "不可改变"--你必须使用 SetState()来修改状态变量以排队重新渲染。 |
+| 在渲染过程中，你不应该读取（或写入）当前值。。 | 你可以在任何时候读取状态。然而，每次渲染都有自己的状态快照，不会改变。 |
+
+---
+
+**在 React 内部，useRef 是这么实现的**
+
+```jsx
+function useRef(initialValue) {
+  const [ref, unused] = useState({current: initialValue});
+  return ref;
+}
+```
+
+## React.memo 解决了什么问题？
+
+在 React 中父组件更新会导致子组件也更新(Vue 只会更新父组件)，使用 memo 缓存子组件，使其不受父级组件更新的影响
+
+- 但是 memo 只能缓存纯静态的，不能缓存事件这种动态的，需要搭配 useCallback 使用
+- useMemo 和 useCallback 的区别就是 useCallback 直接执行函数，而 useMemo 返回这个函数
+- 函数中返回函数: 高阶组件
+
+## 对 React Context 的理解？
+
+> 跨级通信，context-上下文通信
+
+1. 创建上下文空间(Provider 生产者，Consumer 消费者) const xxxContext = createContext()
+2. 要传递的组件包裹在 context 空间里，为 xxxContext.Provider ，传递的值写在 value 里面，
+3. 底层组件要被包裹在 context 空间里，为 xxxContext.Consumer，传递多个需要结构 双花括号
+
+Context 上下文(可以看做是特定组件树内共享的 store) React 是单向数据流的，父子组件通过 props 传递数据，但在多层级或者跨层级组件上，需要维持每一层的数据传递，非常繁琐。
+
+- Context 提供了一种在组件之间共享此类值的方式，而不必显式地通过组件树的逐层传递 props，实现跨层级的数据传递
+- 组件通过 Context 是可以访问到其父组件链上所有节点组件提供的 Context 的属性
+
+## React 在页面重新加载时怎样保留状态
+
+> React 项目中使用 redux 存储全局数据，刷新后数据会被清空？怎么让数据持久化？
+
+- localStorage，浏览器的本地存储且没有时间限制
+- redux-persist，redux-persist 会将 redux 的 store 中的数据缓存到浏览器的 localStorage 中
+
+## React-Router
+
+- react-router-dom 中两种模式； BrowserRouter(History)和 HashRouter(Hash 模式)
+  - 区别是 History 需要服务器端配置 nginx，hash 直接打包就可以使用
+
+## React-Redux
+
+(后续更新....)
+
+> Redux 是一个状态管理库，可以用于很多框架，而 React-redux 是基于 Redux 的 专门用于 react 的
+
+我们使用的 state 都是组件里的，在大型项目我们需要让状态共享，就需要状态管理，在 src 目录里新建一个 store 文件夹，里面放 index.js 和 reducer.js
+
+- store/index.js //仓库的入口文件
+- store/reducer.js // 创建初始状态，并导出一个函数

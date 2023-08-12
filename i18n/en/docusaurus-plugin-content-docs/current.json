@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.skill.category.JavaScript": {
+    "message": "JavaScript",
+    "description": "The label for category JavaScript in sidebar skill"
+  },
+  "sidebar.skill.category.Vue": {
+    "message": "Vue",
+    "description": "The label for category Vue in sidebar skill"
+  },
+  "sidebar.skill.category.React": {
+    "message": "React",
+    "description": "The label for category React in sidebar skill"
+  },
+  "sidebar.skill.category.Git": {
+    "message": "Git",
+    "description": "The label for category Git in sidebar skill"
+  },
+  "sidebar.skill.category.Algorithm": {
+    "message": "Algorithm",
+    "description": "The label for category Algorithm in sidebar skill"
+  },
+  "sidebar.skill.category.杂项": {
+    "message": "杂项",
+    "description": "The label for category 杂项 in sidebar skill"
+  }
+}

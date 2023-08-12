@@ -1,0 +1,190 @@
+---
+id: git-interview
+slug: /git-interview
+title: Git面试题
+date: 2022-08-20
+authors: keqing
+tags: [git]
+keywords: [git]
+sidebar_position: 3
+---
+
+## 本地操作和多人协同相关
+
+### git init 做了什么?
+
+从根本上来讲 `Git` 是一套 `内容寻址 (content-addressable)` 文件系统，在此之上提供了一个 VCS 用户界面。
+
+当你在一个新目录或已有目录内执行 `git init` 时， Git 会创建一个 `.git` 目录， 几乎所有 `Git` 存储和操作的内容都位于该目录下。如果你要备份或复制一个库， 基本上将这一目录拷贝至其他地方就可以了。
+
+其中有四个重要的文件或目录： `HEAD` 及 `index` 文件， `objects` 及 `refs`目录。`objects`目录存储所有数据内容，`refs` 目录存储指向数据 (分支) 的提交对象的指针， HEAD 文件指向当前分支， index 文件保存了暂存区域信息。
+
+### 如何恢复到 git add 之前?
+
+```bash
+git reset <file>
+
+# file此时变成 unstage 状态
+```
+
+### 如何更改还未提交的 commit ?
+
+```bash
+# 方法一
+git commit --amend
+
+# 方法二
+git rebase -i HEAD~{number}
+
+# number 表示 你要编辑 commit 的个数
+```
+
+### 恢复到 commit 之前, add 之后的状态?
+
+```bash
+# 回到 git add 后，commit 前
+git reset --soft HEAD~1
+
+# 回到 git add 之前
+git reset HEAD~1
+
+# 这种方式比较危险。会抛弃所有的更改
+git reset --hard HEAD~1
+```
+
+### 将多个 commit 合并成一个 commit?
+
+```bash
+#查看 commit 历史
+git log
+
+>>> output
+* b1b8189 - (HEAD -> master) Commit-3
+* 5756e15 - Commit-2
+* e7ba81d - Commit-1
+* 5d39ff2 - Commit-0
+
+# 假如合并前三个 commit 为一个, 那么我们可以
+git rebase -i 5d39ff2
+#or
+git rebase -i HEAD~3
+
+
+# 进入到 rebase 交互页面
+
+pick e7ba81d Commit-1
+pick 5756e15 Commit-2
+pick b1b8189 Commit-3
+
+# 改成如下
+
+pick e7ba81d Commit-1
+s 5756e15 Commit-2
+s b1b8189 Commit-3
+
+# 保存退出后, 进入新的界面, 填写此次合并后的 commit message
+
+```
+
+### 误删了一个 commit, 如何 通过 git reflog 恢复?
+
+```bash
+git reflog
+# reflog能看到所有 commit 记录, 包括被删除的, 找到要恢复位置的 commit sha
+
+# -b 不带，默认当前 branch
+git checkout -b newBranch <sha>
+```
+
+### 拉取代码遇到冲突如何解决?
+
+```bash
+# 1. merge
+git pull   # 等价于 git fetch + git merge
+
+# 2. rebase
+git pull --rebase
+```
+
+### git merge 和 git rebase 的区别?
+
+:::tip
+
+- `merge` 操作会生成一个新的节点，之前提交分开显示
+- `rebase` 操作不会生成新的节点，是`将两个分支融合成一个线性`的操作。
+
+::: 如果 主分支 中新的提交和你的工作是相关的。为了将新的提交并入你的分支，你有两个选择：**merge 或 rebase**
+
+- `merge` 合并代码会产生一次新的 `commit`
+- `rebase` 则会`保持提交树的线性`
+- `rebase` 分为 `自动式` 和 `交互式` ( `带上参数 -i `)
+- 未解决完冲突, 可以 `git merge --abort` 中止合并操作
+
+### git fetch 和 git pull 的区别?
+
+> 你 clone 别人的 repo ,等于你是把别人的代码复制了一份, `检测别人代码是否更新` 就可以用以下命令
+
+- `git fetch` 检查是否有可用的更新
+- `git pull` 会做相同的操作, 但还会从远程仓库中引入那些更新到本地(就是多了一份远端代码合并到本地的操作)
+- ` git pull` = `git fetch` + `git merge`
+
+### 其他分支有你需要的代码, 通过 cherry-pick 加入到你的分支
+
+```bash
+# 我们可以把其他分支的 commit 移到当前分支
+git cherry-pick <commit_Ids>
+```
+
+### 常见分支操作有哪些?
+
+```bash
+# 1. 查看 本地 所有branch
+git branch
+
+# 2. 查看 本地和远端 所有branch
+git branch -a
+
+# 3. 创建新的 branch
+git checkout -b <newBranch>
+
+# 4. 重命名 branch
+git branch -m <oldBranch> <newBranch>
+
+# 5. 删除本地或远程分支
+
+# 删除远程分支 origin
+git push -d origin <branch_name>
+
+# 删除本地分支 local
+git branch -d <branch_name>
+
+```
+
+### git reset 和 git revert 的区别
+
+> `git revert` (撤销)被设计为**撤销公开的提交**(比如已经 push)的安全方式，`git reset` 被设计为**重设本地更改**
+
+**两者主要区别如下：**
+
+- `git revert` 是用一次新的 `commit` 来回滚之前的 `commit` ，`git reset` 是直接删除指定的 `commit`
+- `git reset` 是把 HEAD 向后移动了一下，而`git revert`是 `HEAD` 继续前进，只是新的 `commit` 的内容和要 `revert` 的内容正好相反，能够抵消要被 `revert` 的内容
+- 在`回滚`这一操作上看，效果差不多。但是在日后继续 `merge` 以前的老版本时有区别
+
+`git revert`是用一次逆向的 `commit` “中和”之前的提交，因此日后合并老的 `branch` 时，之前提交合并的代码仍然存在，导致不能够重新合并
+
+但是`git reset`是之间把某些 `commit` 在某个 `branch` 上删除，因而和老的 `branch` 再次 `merge` 时，这些被回滚的 `commit` 应该还会被引入
+
+如果回退分支的代码以后还需要的情况则使用`git revert`， 如果分支是提错了没用的并且不想让别人发现这些错误代码，则使用`git reset`
+
+### 如何通过 git hooks 规范团队 commit?
+
+:::note git hooks
+
+- 在使用 Git 的项目中，我们可以为项目设置 Git Hooks 来帮我们在提交代码的各个阶段做一些代码检查等工作
+- 钩子（Hooks） 都被存储在 Git 目录下的 hooks 子目录中。也就是绝大部分项目中的 `.git/hook` 目录
+
+:::
+
+- `pre-commit`  就是在代码提交之前做些东西，比如代码打包，代码检测，称之为钩子（hook）
+- 在 commit 之前执行一个函数（callback）。这个函数成功执行完之后，再继续 commit，但是失败之后就阻止 commit
+- 在 .git->hooks->下面有个 `pre-commit.sample` ，这个里面就是默认的函数(脚本)样本

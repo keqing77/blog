@@ -1,0 +1,247 @@
+# CSS 面试题
+
+## 盒子模型
+
+- 盒子模型是说元素是怎么放置的，可以通过设置`box-model`这个属性
+- W3C 标准盒子模型: `width = content`, 也就是默认的盒子模型
+- IE 盒子模型: `width = padding, content = border`, 在做响应式页面的时候方便计算经常开启。
+
+## 垂直水平居中的方式
+
+- **水平居中**
+  - 行内元素: text-align: center;
+  - 块级元素:
+    - 确定宽度:
+      - margin: 0 auto;
+    - 未知宽度:
+      - 1.display:inline-block && text-align: center;
+      - 2.display:flex/grid && justify-content: center;
+      - 3.绝对定位+transform: translateX(50%)
+- **垂直居中**
+  - line-height 调整行高，适合文字
+  - margin: auto;
+  - 父级相对定位+子级绝对定位+transform: translateY(50%)
+  - vertical-align:middle;
+  - flex/grid + align-items: center;
+
+## 清除浮动
+
+浮动元素会脱离文档流，就和原来的文档不在同一个平面上，导致覆盖其他元素的情况或者父元素高度塌陷等问题。
+
+- 空标签法-------`<div style="clear:both"></div>`
+- 父级元素添加`overflow: hidden`;
+- 伪类------(最推荐的) 加在浮动元素的父元素上
+
+```css
+.clearfix:after {
+  content: '';
+  display: block;
+  clear: both;
+  height: 0;
+  visilbility: hidden;
+}
+```
+
+## z-index
+
+CSS 全称是层叠样式表，不同的层级有不同的堆叠顺序(七层，可以回去看图)，这时候就会出现一个 z-index:9999 的元素盖不过 z-index:-1 的元素，可以开启 postion:relative 等，只要让它们位于同一层级再设置值就可以了。
+
+## BFC
+
+这个东西实在抽象，我不知道怎么去描述它。有点像孙悟空给唐僧画的一个圈，出不去外面的妖怪也进不来 😂。BFC 元素可以理解成被隔离的区间（**BFC 的子元素不会对外面的元素产生影响**，面试中被问到大概讲一下**BFC 的理解和开启条件**就差不多了，也可以阐述**BFC 可以解决什么问题**。
+
+- **开启 BFC**
+
+  - 根元素(display: flow-root)，我们经常用 inline-block 开启 BFC，实际全程是 inline-flow-root
+  - 浮动
+  - 定位(脱离文档流的)
+  - overflow(除了 visible)
+  - 网格元素，包括表单单元格，标题，flex/grid 的子元素
+
+- **BFC 解决的问题**
+  - BFC 是一个独立的容器，里面的元素不会影响的外面的元素，外面的元素也不会影响里面的。
+  - 解决父元素高度塌陷
+  - margin 重叠
+
+theorem BFC Block Formatting Context 又称 **块级格式上下文** BFC 是 Web 页面的可视 CSS 渲染的一部分，是块盒子的布局过程发生的区域，也是浮动元素与其他元素交互的区域。 right [MDN](https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context)
+
+## 实现 0.5px 的线 scale
+
+默认最小能设置 1px 的线，如何实现 0.5px 的线呢？😅
+
+- transform: scale(0.5);
+- 设置 viewport 的 initial-scale=0.5
+- linear-gradient
+
+```css
+.5pxline {
+  height: 1px;
+  background: -webkit-linear-gradient(90deg, #000 50%, transparent 50%);
+}
+```
+
+## 单位的区别 px em rem vw/vh vmin vmax ch/ex 等等
+
+- px
+  - 像素，固定单位
+- em
+  - 相对于父元素的字体大小，假如父元素默认 16px,子元素和孙子元素都是 2em，那么子是 32px,孙是 64px
+- rem
+  - 相对根元素 html,更方便计算
+- vw/vh
+  - viewport 视窗宽度/宽度的 1%,适配移动端
+- vmin/vmax
+  - 视窗较小/较大尺寸的 1% ，可以做横竖屏切换效果。
+- ch/cw
+  - 类似于 em 和 rem, 依赖于当前的字体和字体大小。基于字体的度量单位，依赖于设定的字体
+
+## 选择器和优先级
+
+tip 选择器权重优先级
+
+- !important > #id > .class = 伪类 > tag 标签 = 伪元素
+- 权重分别为 !important(无穷大) id(1000) 类(10) 标签(1)
+
+theorem 选择器
+
+- 后代选择器
+  - 语法 A B (中间是空格)
+  - 匹配所有后代
+- 子选择器
+  - 语法 A > B
+  - 直接子元素才会被选择
+- 兄弟选择器
+  - 语法 A ~ B
+  - 后面的所有元素
+- 相邻兄弟选择器
+  - 语法 A + B
+  - 在后面第一个的元素
+- 伪类/伪元素选择器
+  - 语法 :hover/:visted/p::first-line
+  - 太多就不写了，不会可以看[十分钟上手 CSS Selector](https://www.bilibili.com/video/BV1et411K7RU?spm_id_from=333.999.0.0)
+
+## 隐藏元素的方法有哪些？区别？
+
+1. display:none;隐藏元素，渲染树不会包含该渲染对象，因此该元素不会在页面中占据位置，也不会响应绑定的监听事件。
+2. visibility:hidden;隐藏元素。元素在页面中仍占据空间，但是不会响应绑定的监听事件。
+3. opacity:0;将元素的透明度设置为 0，以此来实现元素的隐藏。元素在页面中仍然占据空间，并且能够响应元素绑定的监听事件。
+4. 通过使用绝对定位将元素移除可视区域内，以此来实现元素的隐藏。
+5. 通过 z-index 负值，来使其他元素遮盖住该元素，以此来实现隐藏。
+6. 通过 clip/clip-path 元素裁剪的方法来实现元素的隐藏，这种方法下，元素仍在页面中占据位置，但是不会响应绑定的监听事件。
+7. 通过 transform:scale(0,0)来将元素缩放为 0，以此来实现元素的隐藏。这种方法下，元素仍在页面中占据位置，但是不会响应绑定的监听事件。
+
+## 移动端适配方案
+
+- 单位使用 em/rem 布局，更推荐 vw/vh 布局
+- 百分比布局
+- 响应式布局,配合媒体查询@media-query
+- 图片使用`srcset`放不同分辨率下的图片，max-width(图片自适应,随着容器的大小进行缩放)
+- object-fit:cover
+
+## 图片格式的区别
+
+- JPG/JPEG
+  - 有损压缩、体积小、加载快、不支持透明,
+  - 即可以保住图片的质量，又不会带来令人头疼的图片体积
+- PNG
+  - 无损压缩、质量高、体积大、支持透明,
+  - 有 png8 和 png24 两种格式,8 最多支持 256 种颜色,24 则约 1600 万种,
+  - PNG 图片具有比 JPG 更强的色彩表现力，对线条的处理更加细腻，对透明度有良好的支持。
+- GIF
+  - 可以显示动态图,可以看作是会动的 jpg 图
+- SVG
+  - 文本文件、体积小、不失真、兼容性好
+  - 常规的像素图放大后图片就会变模糊,基于矢量的 svg 则不会,适合做 logo 或者地图
+- BMP
+  - 不压缩,高保真,体积大
+  - bmp 格式保存的图像质量不变，文件也比较大
+- Base64
+  - 文本文件、依赖编码、小图标解决方案
+  - 图片更新需要重复编码,编码内容较多会破坏 html 结构
+- WEBP
+  - 是 Google 专为 Web 开发的一种旨在加快图片加载速度的图片格式，它支持有损压缩和无损压缩
+  - WebP 像 JPEG 一样对细节丰富的图片信手拈来，像 PNG 一样支持透明，像 GIF 一样可以显示动态图片——它集多种图片文件格式的优点于一身
+
+## 伪类和伪元素
+
+- 伪类
+  - 选择某个状态下的元素，比如:hover
+- 伪元素
+  - 创建通常不存在于文档中的元素，比如::before
+
+## CSS 实现 1 个三角形
+
+> 实现方法很多，最常见就是设置 border 以及为三边设置 transparent 透明
+
+```css
+div {
+  width: 0;
+  height: 0;
+  border-top: 40px solid transparent;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 40px solid #ff0000;
+}
+```
+
+## 上下固定，中间滚动布局如何实现
+
+- Flex
+  - 父容器开启 flex，上下固定高度，中间设置 flex：1 自适应高度
+  - 如果设置中间滚动，而上下不滚动这可以这样 overflow-auto
+
+```html
+
+```
+
+## 三列布局如何实现(圣杯布局 用 Float 或 Flex 呢？)
+
+- Float
+  - 都设置 float:left，左右给固定宽度，中间-margin
+- Flex
+  - 父容器开启 flex，左右固定一百宽度，中间容器设置 flex:1 自适应宽度
+
+## Flex 常用属性、和 Grid 对比
+
+- flex 属性有空补充文章及此处，也就那么几个没什么好说的。。
+- flex 是一维的，Grid 是二维的。意思就是 Flex 只能同时控制一行或者一列，而 Grid 行列都可以控制，有些效果可能需要嵌套多层 flex 等
+- flex 在多列排布元素对齐上会麻烦点，grid 则简单得多，grid 更加强大
+- 有空补充 grid，非常强大
+
+## 媒体查询，响应式页面
+
+- 使用@media 媒体查询通过不同设备/分辨率等应用不同样式，常用于响应式页面
+- 响应式的意思是页面根据大小会变化不同的样式，特别是在现在手机流行的时代，一套代码同时适应 PC 和 Mobile 是大势所趋
+- 判断响应式最简单的一条原则: 底部不能出现横向的滚动条
+
+## 滚动视差效果实现
+
+- 通过控制不同背景不同的滚动效果所带来的视觉效果
+  - 可以采用 background-attachment 这个属性
+  - 第三方插件，如[parallax.js](https://matthew.wagerfield.com/parallax/)
+
+## 动画和过渡区别
+
+- 过渡效果开启并生效的原理(很多人不明白的)[你可能并不了解 Transition](https://juejin.cn/post/7062507282046648357)
+- 过渡强调的是`开始`和`结束`这两个状态，动画可以设置多个关键帧。
+- 过渡只有一次(除非重复触发)，动画可以多次。
+- 过渡需要事件触发，动画可以自动开启。
+
+## base64 原理和优缺点
+
+> 这个背后编码还得后续深入了解一下，我也只是稍稍涉猎而已。
+
+- **图片的 base64 编码就是将一张图片数据编码成一串字符串，使用该字符串代替图像地址 url**
+
+tip 优缺点
+
+- 优点
+  - 无需额外请求，减少 http 请求次数
+  - 没有跨域问题，无需考虑缓存、文件头或者 cookies 问题
+- 缺点
+  - 增加 css 文件的大小
+  - 破坏页面可读性，base64 非常长。。。
+
+## CSS 实现刮刮乐效果
+
+之前看过用 canvas 实现的，自己还没做过，先写在这里备忘 未完待续...
